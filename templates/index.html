@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>wasteof.inspiration</title>
+    <link rel="stylesheet" href="static/main.css">
+  </head>
+
+  <body>
+    {% for item in data %}
+      <div class="post">
+        <b>@{{item["username"]}}</b>
+        <hr size = 1>
+        {{item["content"]}}
+       </div>
+    {% endfor %}
+    <br>
+    <hr>
+    <form method="post">
+      <label for = "post">Comment:</label><br>
+      <textarea name = "content" id = "post" placeholder = "Enter your comment"></textarea><br>
+      <input type = "checkbox" id="deleteall" name="purge"><label for="deleteall">Delete all messages</label><br>
+      <input type = "submit"><input type = "reset">
+    </form>
+  </body>
+</html>

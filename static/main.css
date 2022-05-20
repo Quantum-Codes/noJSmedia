@@ -1,0 +1,16 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+a {
+  color: #00a4d6;
+}
+
+.post {
+  margin: 10px auto;
+  padding: 15px;
+  width: 80%;
+  border: solid grey;
+  border-radius: 10px;
+}

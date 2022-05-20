@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login</title>
+    <link rel="stylesheet" href="static/login.css">
+  </head>
+  <body>
+    <form method="post">
+      <div class = "loginbox">
+        <h2>Login</h2>
+        <hr>
+        <label for="user">Username:</label><input type="text" name="user" id="user" placeholder="Username"><br>
+        <label for="pass">Password:</label><input type="password" name="pass" id="pass" placeholder="Password"><br>
+        <input type="submit"><input type="reset">
+        <hr>
+        <div style="text-align:center;">Don't have an account? <a href="/signup">SignUp</a></div>
+      </div>
+    </form>
+    {% if msg %}
+      <div class="errorbox">{{"<b>ⓘ</b> "|safe + msg}}</div>
+    {% endif %}
+  </body>
+</html>

@@ -1,0 +1,35 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+a {
+  color: #00a4d6;
+}
+
+.loginbox {
+  width: 80%;
+  padding: 10px;
+  border: solid lightgray;
+  border-radius: 5px;
+  margin: 10px auto;
+  text-align: center;
+}
+
+input {
+  margin-bottom: 2px;
+}
+
+h2 {
+  margin: 0;
+}
+
+.errorbox {
+  width: 80%;
+  border: solid darkred;
+  background: indianred;
+  color: darkred;
+  border-radius: 10px;
+  padding: 5px;
+  margin: 5px auto;
+}
