@@ -11,7 +11,7 @@
   <body>
     {% for item in data %}
       <div class="post">
-        <b>@{{item["username"]}}</b>
+        <b><a href={{"/users/"+item.username}} class ="username">@{{item["username"]}}</a></b>
         <hr size = 1>
         {{item["content"]}}
        </div>

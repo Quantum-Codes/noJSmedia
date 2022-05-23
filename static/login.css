@@ -7,7 +7,7 @@ a {
   color: #00a4d6;
 }
 
-.loginbox {
+#loginbox {
   width: 80%;
   padding: 10px;
   border: solid lightgray;
@@ -24,7 +24,7 @@ h2 {
   margin: 0;
 }
 
-.errorbox {
+#errorbox {
   width: 80%;
   border: solid darkred;
   background: indianred;

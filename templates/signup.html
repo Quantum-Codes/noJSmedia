@@ -8,18 +8,18 @@
   </head>
   <body>
     <form method="post">
-      <div class = "loginbox">
+      <div id = "loginbox">
         <h2>Signup</h2>
         <hr>
         <label for="user">Username:</label><input type="text" name="user" id="user" placeholder="Username"><br>
         <label for="pass">Password:</label><input type="password" name="pass" id="pass" placeholder="Password"><br>
-        <input type="submit"><input type="reset">
+        <input type="submit"><input type="reset" value="clear">
         <hr>
         <div style="text-align:center;">Already have an account? <a href="/login">LogIn</a></div>
       </div>
     </form>
     {% if msg %}
-      <div class="errorbox">{{"<b>ⓘ</b> "|safe + msg}}</div>
+      <div id="errorbox">{{"<b>ⓘ</b> "|safe + msg}}</div>
     {% endif %}
   </body>
 </html>

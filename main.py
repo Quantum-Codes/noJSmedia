@@ -1,3 +1,8 @@
+"""writing line 114
+Make userpages and make username restrictions using len() and regex. password only len() restriction.
+maybe make post restrictions also
+"""
+
 from replit import db
 import secrets, time, random
 from flask import Flask, render_template, request, redirect, make_response
@@ -23,6 +28,12 @@ def respond(cookie, value, page, expire = 60):
   res.set_cookie(cookie, value, expires=int(time.time() + expire))
   return res
 
+def namevalid(name):
+  if len(name) < 21:
+    return True
+  else:
+    return False
+
 """
 db.clear()
 db["data"] = "hi"
@@ -30,12 +41,14 @@ print(db["data"])
 db["data"] = [
   {
     "username": "User1",
-    "content": "First post yay"
+    "content": "First post yay",
+    "id": 1
   }
 ]
 
 
 db["login"] = {}
+db["users"] = {}
 db["session"] = {}
 exit()
 #"""
@@ -51,14 +64,14 @@ def homepage():
   if not request.cookies.get("session"):
     return redirect("/login")
   if request.method == "POST":
-    #print(request.form)
     if request.form.get("purge") == "on":
       db["data"] = []
     else:
       comments = db["data"]
       comments.append({
         "username": db["session"][request.cookies["session"]],
-        "content": request.form["content"]
+        "content": request.form["content"],
+        "id": 1
       })
       db["data"] = comments
       return redirect("/home")
@@ -67,7 +80,7 @@ def homepage():
   comments = db["data"]
   return render_template("index.html", data = comments)
 
-@app.route("/login", methods=["GET","POST"])#verifying not made
+@app.route("/login", methods=["GET","POST"])
 def loginpage():
   if request.method == "POST":
     if not db["login"].get(request.form["user"].lower()):
@@ -83,23 +96,34 @@ def loginpage():
   res.set_cookie("msg","",expires=0) #delete cookie
   return res #don't use respond as not redirecting...
 
-@app.route("/signup", methods=["GET", "POST"])#incomeplete
+@app.route("/signup", methods=["GET", "POST"])
 def signuppage():
   if request.method == "POST":
     if not (request.form["user"] and request.form["pass"]):
       return respond("msg", "username/password can't be empty", "/signup")
-      
+
+    if not namevalid(request.form["user"]):
+      return respond("msg", "Username length must be less than 21 and only containing characters: A-Z, a-z, _, -", "/signup")
+    
     if db["login"].get(request.form["user"].lower()):
       return respond("msg", "name already exists", "/signup")
     else:
-      print(hashit(request.form["pass"]))
       db["login"][request.form["user"].lower()] = hashit(request.form["pass"])
       session = create_session()
       db["session"][session] = request.form["user"]
+      db["users"][request.form["user"].lower()] = {"bio": "", "posts":[]}
       return respond("session",session,"/home",30*24*60*60)
   msg = request.cookies.get("msg")
   res = make_response(render_template("signup.html",msg=msg))
   res.set_cookie("msg","",expires=0) #delete cookie
   return res #don't use respond as not redirecting...
+
+@app.route("/users/<user>")
+def userpage(user):
+  if db["users"].get(user.lower()):
+    return f"I got the page. WIP {user}"
+  else:
+    return f"User {user} doesn't exist..."
+
 
 app.run(host='0.0.0.0', port=8080)
