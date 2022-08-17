@@ -1,0 +1,52 @@
+:root {
+  --rad: 10px;
+}
+
+body {
+  background-color: black;
+  color: white;
+}
+
+a {
+  color: #00a4d6;
+}
+
+h2 {
+  margin: 0;
+}
+
+.username {
+  text-decoration: none;
+}
+
+.post {
+  margin: 10px auto;
+  padding: 15px;
+  width: 80%;
+  border: solid grey;
+  border-radius: 10px;
+}
+
+#userbox {
+  width: 80%;
+  border-radius: var(--rad);
+  border: solid #545454;
+  margin: 10px auto;
+}
+
+#userbar {
+  background: #707070;
+  padding: 10px;
+  border-radius: var(--rad) var(--rad) 0px 0px;
+}
+
+.bio { /* bio is a flex item */
+  width: 50%;
+  margin: 1px;
+}
+
+.bio div {
+  box-sizing: border-box;
+  border: dashed darkgray;
+  height: 100px;
+}

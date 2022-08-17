@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{user.name}} on here</title>
+    <link rel="stylesheet" href="../static/user.css">
+  </head>
+  <body>
+    <div id="userbox">
+      <div id="userbar">
+        <h2>{{user.name}}</h2><br>
+        joined: {{user.joined}} ago I think
+      </div>
+      <div style="display: flex;">
+        <div class="bio">Bio:<div>{{user.bio}}</div></div>
+        <div class="bio">Stats:<div></div></div>
+      </div>
+    </div>
+    <div>
+      <h2>Posts:</h2><br>
+      {% for item in posts %}
+        {% set item = item.comment %}
+        <div class="post">
+          <b><a href={{"/users/"+item.username}} class ="username">@{{item["username"]}}</a></b>
+          <hr size = 1>
+          {{item["content"]}}
+        </div>
+      {% endfor %}
+    </div>
+  </body>
+</html>

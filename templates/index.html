@@ -10,6 +10,7 @@
 
   <body>
     {% for item in data %}
+      {% set item = item["comment"] %}
       <div class="post">
         <b><a href={{"/users/"+item.username}} class ="username">@{{item["username"]}}</a></b>
         <hr size = 1>
