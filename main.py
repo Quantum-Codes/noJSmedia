@@ -78,13 +78,14 @@ def homepage():
       comments = db["data"]
       user = db["session"][request.cookies["session"]]
       with open("id.txt","r") as file:
-        commentid = int(file.read()) + 1
+        commentid = int(file.read())
       with open("id.txt", "w") as file:
-        file.write(str(commentid))
-      comment = {"id": commentid, "comment": {
+        file.write(str(commentid+1))
+      comment = {
+        "id": commentid,
         "username": user,
         "content": request.form["content"]
-      }}
+      }
       comments.append(comment)
       db["users"][user.lower()]["posts"].append(commentid)
       db["data"] = comments
@@ -139,10 +140,16 @@ def userpage(user):
     with open("postlist.json", "w") as file:
       file.write(json.dumps(json.loads(db.get_raw("users"))[user.lower()]["posts"], indent=2))
     postlist = db["users"][user.lower()]["posts"]
+    postlist.reverse()
+    """
     for item in db["data"]:
       if item["id"] in postlist:
         posts.append(item)
-    posts.reverse()#new posts on top
+    """
+    #posts.reverse()#new posts on top
+    for item in postlist:
+      posts.append(db["data"][item])
+
     return render_template("user.html", user=db["users"][user.lower()], posts=posts)
   else:
     return f"User {user} doesn't exist..."
