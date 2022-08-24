@@ -13,6 +13,7 @@ a {
 
 h2 {
   margin: 0;
+  display: inline;
 }
 
 .username {
@@ -45,8 +46,30 @@ h2 {
   margin: 1px;
 }
 
-.bio div {
+.box {
+  width: 100%;
   box-sizing: border-box;
   border: dashed darkgray;
   height: 100px;
+  background: black;
+  color: white;
+  resize: none;
+}
+
+#savebutton {
+  border-radius: 0px 0px var(--rad) var(--rad);
+  padding: 2px;
+  text-align: right;
+  box-sizing:border-box;
+  padding-right: 5px;
+}
+
+#follow {
+  display:inline;
+  float:right;
+  margin-right: 5px;
+}
+
+input[type=submit] {
+  padding: 5px;
 }

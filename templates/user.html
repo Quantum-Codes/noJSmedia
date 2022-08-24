@@ -10,19 +10,26 @@
   <body>
     <div id="userbox">
       <div id="userbar">
-        <h2>{{user.name}}</h2><br>
+        <h2>{{user.name}}</h2><form action="/follow" method="get" id="follow"><input name="follow" type="hidden" value={{user.name.lower()}}><input type="submit" value={{follow}}></form><br>
         joined: {{user.joined}} ago I think
       </div>
+      <form id="biobox" method= "post">
       <div style="display: flex;">
-        <div class="bio">Bio:<div>{{user.bio}}</div></div>
-        <div class="bio">Stats:<div></div></div>
+        <div class="bio">Bio:<br><textarea name="bio" class="box">{{user.bio}}</textarea></div>
+        <div class="bio">Status:<textarea name="status" class="box">{{user.status}}</textarea></div>
       </div>
+        <div id ="savebutton"><input type="submit" form="biobox"></div>
+      </form>
+    </div>
+    <div>
+      <h2>Following:</h2><br>
+      {{following}}
     </div>
     <div>
       <h2>Posts:</h2><br>
       {% for item in posts %}
         <div class="post">
-          <b><a href={{"/users/"+item.username}} class ="username">@{{item["username"]}}</a></b>
+          <b><a href={{"/users/"+item.username}} class ="username">@{{user.name}}</a></b>
           <hr size = 1>
           {{item["content"]}}
         </div>

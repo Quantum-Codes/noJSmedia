@@ -39,23 +39,22 @@ def namevalid(name):
   else:
     return False
 
+def resetid():
+  with open("id.txt","w") as file:
+    file.write("0")
+
 """
 db.clear()
 db["data"] = []
 print(db["data"])
 
-db["data"] = [
-  {
-    "username": "User1",
-    "content": "First post yay",
-    "id": 1
-  }
-]
+db["data"] = []
 
 
 db["login"] = {}
 db["users"] = {}
 db["session"] = {}
+resetid()
 exit()
 #"""
 @app.route("/", methods=["GET","POST"])
@@ -67,23 +66,24 @@ def mainpage():
 
 @app.route('/home', methods=["GET","POST"])
 def homepage():
-  if not verify_session(request):
+  user = verify_session(request)
+  if not user:
     return redirect("/login")
   if request.method == "POST":
     if request.form.get("purge") == "on":
       db["data"] = []
+      resetid()
       for item in db["users"].keys():
         db["users"][item]["posts"] = []
     else:
       comments = db["data"]
-      user = db["session"][request.cookies["session"]]
       with open("id.txt","r") as file:
         commentid = int(file.read())
       with open("id.txt", "w") as file:
         file.write(str(commentid+1))
       comment = {
         "id": commentid,
-        "username": user,
+        "username": db["users"][user]["name"],
         "content": request.form["content"]
       }
       comments.append(comment)
@@ -93,7 +93,7 @@ def homepage():
   else:
     pass
   comments = db["data"]
-  return render_template("index.html", data = comments)
+  return render_template("index.html", data = comments, user = db["users"][user])
 
 @app.route("/login", methods=["GET","POST"])
 def loginpage():
@@ -124,19 +124,34 @@ def signuppage():
       return respond("msg", "name already exists", "/signup")
     else:
       db["login"][request.form["user"].lower()] = hashit(request.form["pass"])#setup user
-      session = create_session()
-      db["session"][session] = request.form["user"]
-      db["users"][request.form["user"].lower()] = {"name": request.form["user"], "joined": int(time.time()), "bio": "", "posts":[]}
+      session = create_session() #CREATION HERE
+      db["session"][session] = request.form["user"].lower()
+      db["users"][request.form["user"].lower()] = {"name": request.form["user"], "joined": int(time.time()), "bio": "", "status": "", "posts":[], "following": [], "followers": []}
       return respond("session",session,"/home",30*24*60*60)
   msg = request.cookies.get("msg")
   res = make_response(render_template("signup.html",msg=msg))
   res.set_cookie("msg","",expires=0) #delete cookie
   return res #don't use respond as not redirecting...
 
-@app.route("/users/<user>")
+@app.route("/users/<user>", methods = ["GET", "POST"])
 def userpage(user):
+  username = verify_session(request)
+  if not username:
+    return redirect("/login")
+  if request.method == "POST":
+    bio = request.form["bio"]
+    status = request.form["status"]
+    if len(bio) > 100 or len(status) > 100:
+      bio = bio[:100]
+      status = status[:100]
+    db["users"][username].update(bio=bio, status=status) #update multiple keys at once
+
   if db["users"].get(user.lower()):
     posts = []
+    follow = "follow"
+    following = db["users"][username]["following"]
+    if user.lower() in following:
+      follow = "unfollow"
     with open("postlist.json", "w") as file:
       file.write(json.dumps(json.loads(db.get_raw("users"))[user.lower()]["posts"], indent=2))
     postlist = db["users"][user.lower()]["posts"]
@@ -150,9 +165,25 @@ def userpage(user):
     for item in postlist:
       posts.append(db["data"][item])
 
-    return render_template("user.html", user=db["users"][user.lower()], posts=posts)
+    return render_template("user.html", user=db["users"][user.lower()], posts=posts, follow = follow, following = following)
   else:
     return f"User {user} doesn't exist..."
 
+@app.route("/follow")
+def followpage():
+  user = verify_session(request)
+  print(request.args)
+  if request.args["follow"] in db["users"][user]["following"]:
+    db["users"][user]["following"].remove(request.args["follow"])
+  else:
+    db["users"][user]["following"].append(request.args["follow"])
+  return redirect("/users/"+request.args["follow"])
+
+
+@app.route("/users")
+def userlist():
+  return render_template("test.html", text="text")
+  
+  
 
 app.run(host='0.0.0.0', port=8080)
