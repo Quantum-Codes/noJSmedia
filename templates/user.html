@@ -1,6 +1,9 @@
 {% extends "block.html" %}
 {% block title %}{{user.name}} on here{% endblock %}
 {% block css %}/static/users.css{% endblock %}
+{% block optionalcss %}<link rel="stylesheet" href="/static/comment.css">{% endblock %}
+{% from "macros.html" import comment %}
+
 {% block body %}
    <div id="userbox">
       <div id="userbar">
@@ -29,11 +32,7 @@
     <h2>Posts:</h2><br>
     <div>
       {% for item in posts %}
-        <div class="post">
-          <b><a href={{"/users/"+item.username}} class ="username">@{{user.name}}</a></b>
-          <hr size = 1>
-          {{item["content"]}}
-        </div>
+        {{ comment(item, loop.index0) }}
       {% endfor %}
     </div>
  

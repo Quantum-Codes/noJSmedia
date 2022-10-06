@@ -6,6 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/nav.css">
     <link rel="stylesheet" href= {% block css %}{% endblock %}>
+    {% block optionalcss %}{% endblock %}
   </head>
   <body style="margin:0px;">
     <div id="nav">

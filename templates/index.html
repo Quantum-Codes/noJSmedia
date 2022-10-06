@@ -1,22 +1,11 @@
 {% extends "block.html" %}
 {% block title %}Home{% endblock %}
 {% block css %}/static/main.css{% endblock %}
-
+{% block optionalcss %}<link rel="stylesheet" href="/static/comment.css">{% endblock %}
+{% from "macros.html" import comment %}
 {% block body %}
-    {% set classlist = ["primary", "secondary"] %}
     {% for item in data %}
-      {% set index = loop.index0 % 2 %}
-      <div class="post {{ classlist[index] }}">
-        <b><a href={{"/users/"+item.username}} class ="username">@{{item["username"]}}</a></b>
-        <hr size = 1>
-        {% for line in item["content"].split("\n") %}
-          {{line}}<br>
-
-        {% endfor %}
-        <br>
-        <input class="love" id="{{loop.index0}}" type="checkbox" style="display:none;">
-        <label for="{{loop.index0}}"><img src="https://img.icons8.com/sf-black-filled/25/like.png" class="like"></label>
-       </div>
+      {{ comment(item, loop.index0) }}
     {% endfor %}
     <br>
     <hr>
@@ -26,4 +15,6 @@
       <input type = "checkbox" id="deleteall" name="purge"><label for="deleteall">Delete all messages</label>
       <div id="buttons"><input type = "submit"><input type = "reset"></div><span style="clear: both;"></span>
     </form>
+<br>
+<small>Note: Liking doesnt work as it requires JS and this is noJSmedia.. I could have made it work by making CSS request to an API (in form of image url) but... I didn't.  Also making each like button a form isn't great idea since after every like, the page has to be reloaded </small>
 {% endblock %}

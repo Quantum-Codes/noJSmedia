@@ -1,9 +1,9 @@
 {% macro comment(data, index) %}
   {% set classlist = ["primary", "secondary"] %}
   <div class="post {{ classlist[index%2] }}">
-    <b><a href={{"/users/"+item.username}} class ="username">@{{item.username}}</a></b>
+    <b><a href={{"/users/"+data.username}} class ="username">@{{data.username}}</a></b>
     <hr size = 1>
-    {% for line in item["content"].split("\n") %}
+    {% for line in data["content"].split("\n") %}
       {{line}}<br>
     {% endfor %}
     <br>
