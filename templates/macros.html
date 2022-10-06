@@ -1,0 +1,13 @@
+{% macro comment(data, index) %}
+  {% set classlist = ["primary", "secondary"] %}
+  <div class="post {{ classlist[index%2] }}">
+    <b><a href={{"/users/"+item.username}} class ="username">@{{item.username}}</a></b>
+    <hr size = 1>
+    {% for line in item["content"].split("\n") %}
+      {{line}}<br>
+    {% endfor %}
+    <br>
+    <input class="love" id="{{index}}" type="checkbox" style="display:none;">
+    <label for="{{index}}"><img src="https://img.icons8.com/sf-black-filled/25/like.png" class="like"></label>
+  </div>
+{% endmacro %}
