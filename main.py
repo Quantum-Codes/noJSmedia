@@ -6,12 +6,14 @@ made comment ID. make so that post is saved in db only 1 time (now 2 in data and
 """
 
 from replit import db
-import secrets, time, random, json
+import secrets, time, random, re
 from flask import Flask, render_template, request, redirect, make_response
 from flask_bcrypt import Bcrypt
 
 app = Flask('app')
 hash = Bcrypt(app)
+regexuser = re.compile("^[A-Za-z0-9_-]{1,20}$")
+regexpass = re.compile("^[A-Za-z0-9.:;!,-?+*_]{1,25}$")
 
 def hashit(password):
   return hash.generate_password_hash(password).decode("utf8")
@@ -34,8 +36,16 @@ def respond(cookie, value, page, expire = 60):
   return res
 
 def namevalid(name):
-  if len(name) < 21:
-    return True
+  return regexuser.match(name)
+
+def passvalid(passwo):
+  return regexpass.match(passwo)
+
+def postvalid(post):
+  if 0 < len(post) < 101:
+    return post
+  elif len(post) > 0:
+    return post[:100]
   else:
     return False
 
@@ -70,12 +80,13 @@ def homepage():
   if not user:
     return redirect("/login")
   if request.method == "POST":
+    postcontent = postvalid(request.form["content"])
     if request.form.get("purge") == "on":
       db["data"] = []
       resetid()
       for item in db["users"].keys():
         db["users"][item]["posts"] = []
-    else:
+    elif postcontent:
       comments = db["data"]
       with open("id.txt","r") as file:
         commentid = int(file.read())
@@ -83,17 +94,18 @@ def homepage():
         file.write(str(commentid+1))
       comment = {
         "id": commentid,
-        "username": db["users"][user]["name"],
-        "content": request.form["content"]
+        "username": db["users"][user.lower()]["name"],
+        "content": postcontent
       }
       comments.append(comment)
       db["users"][user.lower()]["posts"].append(commentid)
       db["data"] = comments
-      return redirect("/home")
+    return redirect("/home")
   else:
     pass
-  comments = db["data"]
-  return render_template("index.html", data = comments, user = db["users"][user])
+  comments = db["data"][:]
+  comments.reverse()
+  return render_template("index.html", data = comments, user = db["users"][user.lower()])
 
 @app.route("/login", methods=["GET","POST"])
 def loginpage():
@@ -102,7 +114,7 @@ def loginpage():
       return respond("msg","User doesnt exist","/login")
     if compareit(db["login"][request.form["user"].lower()], request.form["pass"]):
       session = create_session()
-      db["session"][session] = request.form["user"]
+      db["session"][session] = request.form["user"].lower()
       return respond("session",session,"/home",30*24*60*60)
     else:
       return respond("msg","wrong credentials","/login")
@@ -117,8 +129,8 @@ def signuppage():
     if not (request.form["user"] and request.form["pass"]):
       return respond("msg", "username/password can't be empty", "/signup")
 
-    if not namevalid(request.form["user"]):
-      return respond("msg", "Username length must be less than 21 and only containing characters: A-Z, a-z, _, -", "/signup")
+    if not (namevalid(request.form["user"]) and passvalid(request.form["pass"])):
+      return respond("msg", "Username and password length must be less than 21 and only containing characters: A-Z, a-z, _, -. Passwords can have additional chars: .:;!-?,+*_", "/signup")
     
     if db["login"].get(request.form["user"].lower()):
       return respond("msg", "name already exists", "/signup")
@@ -126,7 +138,7 @@ def signuppage():
       db["login"][request.form["user"].lower()] = hashit(request.form["pass"])#setup user
       session = create_session() #CREATION HERE
       db["session"][session] = request.form["user"].lower()
-      db["users"][request.form["user"].lower()] = {"name": request.form["user"], "joined": int(time.time()), "bio": "", "status": "", "posts":[], "following": [], "followers": []}
+      db["users"][request.form["user"].lower()] = {"name": request.form["user"], "joined": int(time.time()), "bio": "", "status": "", "posts":[], "following": [], "followers": [], "admin": False}
       return respond("session",session,"/home",30*24*60*60)
   msg = request.cookies.get("msg")
   res = make_response(render_template("signup.html",msg=msg))
@@ -144,17 +156,15 @@ def userpage(user):
     if len(bio) > 100 or len(status) > 100:
       bio = bio[:100]
       status = status[:100]
-    db["users"][username].update(bio=bio, status=status) #update multiple keys at once
+    db["users"][username.lower()].update(bio=bio, status=status) #update multiple keys at once
 
   if db["users"].get(user.lower()):
     posts = []
     follow = "follow"
-    following = db["users"][username]["following"]
+    following = db["users"][username.lower()]["following"]
     if user.lower() in following:
       follow = "unfollow"
-    with open("postlist.json", "w") as file:
-      file.write(json.dumps(json.loads(db.get_raw("users"))[user.lower()]["posts"], indent=2))
-    postlist = db["users"][user.lower()]["posts"]
+    postlist = db["users"][user.lower()]["posts"][:] #not pointer which will change the original list. this just copies the list
     postlist.reverse()
     """
     for item in db["data"]:
@@ -182,8 +192,19 @@ def followpage():
 
 @app.route("/users")
 def userlist():
-  return render_template("test.html", text="text")
+  if request.args.get("q"):
+    return redirect(f"/users/{request.args['q'].strip()}")
+  return render_template("allusers.html", text=db["users"].keys())
   
-  
+@app.route("/logout")
+def logoutpage():
+  user = verify_session(request)
+  if not user:
+    return redirect("/login")
+  return respond("session", "", "/login", 0)
+
+@app.errorhandler(404)
+def notfoundpage(error):
+  return render_template("404.html")
 
 app.run(host='0.0.0.0', port=8080)

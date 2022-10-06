@@ -70,6 +70,22 @@ h2 {
   margin-right: 5px;
 }
 
+#following {
+  overflow: auto;
+  margin: 0px 20px;
+}
+
+#following div {
+  display: inline-block;
+  text-align: center;
+}
+
 input[type=submit] {
   padding: 5px;
 }
+
+.pfp {
+  width: 4em;
+  height: auto;
+}
+

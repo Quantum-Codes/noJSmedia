@@ -1,0 +1,20 @@
+{% extends "block.html" %}
+{% block title %} Userlist {% endblock %}
+{% block css %}/static/main.css{% endblock %}
+
+{% block body %}
+<form autocomplete="off">
+  <label for="searchbar">Go to userpage: </label>
+  <input type ="search" name="q" list="data" id="searchbar">
+  <datalist id="data">
+    {% for item in text %}
+    <option value={{item}}>
+    {% endfor %}
+  </datalist>
+</form>
+<ol>
+{% for item in text %}
+  <li><a href="/users/{{item}}">{{item}}</a></li>
+{% endfor %}
+</ol>
+{% endblock %}

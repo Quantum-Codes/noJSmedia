@@ -1,13 +1,9 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Signup</title>
-    <link rel="stylesheet" href="static/login.css">
-  </head>
-  <body>
-    <form method="post">
+{% extends "block.html" %}
+{% block title %}Signup{% endblock %}
+{% block css %}/static/login.css{% endblock %}
+
+{% block body %}
+   <form method="post">
       <div id = "loginbox">
         <h2>Signup</h2>
         <hr>
@@ -21,5 +17,4 @@
     {% if msg %}
       <div id="errorbox">{{"<b>ⓘ</b> "|safe + msg}}</div>
     {% endif %}
-  </body>
-</html>
+{% endblock %}

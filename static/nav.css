@@ -1,0 +1,29 @@
+#nav {
+  background: #2291e6;
+  display: flex;
+  justify-content: space-between;
+}
+
+#nav li a {
+  text-decoration: none;
+  color: black;
+}
+
+#nav ul {
+  display: flex;
+  list-style: none;
+  margin: 0px;
+  padding: 0px; /*reset list styles*/
+}
+
+#nav li {
+  padding: 0.5em;
+}
+
+#nav li:hover {
+  background: green;
+}
+
+#margin {
+  margin: 1em;
+}

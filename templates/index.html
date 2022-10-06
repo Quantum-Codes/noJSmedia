@@ -1,29 +1,29 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends "block.html" %}
+{% block title %}Home{% endblock %}
+{% block css %}/static/main.css{% endblock %}
 
-    <title>wasteof.inspiration</title>
-    <link rel="stylesheet" href="static/main.css">
-  </head>
-
-  <body>
+{% block body %}
+    {% set classlist = ["primary", "secondary"] %}
     {% for item in data %}
-      
-      <div class="post">
+      {% set index = loop.index0 % 2 %}
+      <div class="post {{ classlist[index] }}">
         <b><a href={{"/users/"+item.username}} class ="username">@{{item["username"]}}</a></b>
         <hr size = 1>
-        {{item["content"]}}
+        {% for line in item["content"].split("\n") %}
+          {{line}}<br>
+
+        {% endfor %}
+        <br>
+        <input class="love" id="{{loop.index0}}" type="checkbox" style="display:none;">
+        <label for="{{loop.index0}}"><img src="https://img.icons8.com/sf-black-filled/25/like.png" class="like"></label>
        </div>
     {% endfor %}
     <br>
     <hr>
-    <form method="post">
+    <form method="post" id="poster">
       <label for = "post">Comment:</label><br>
-      <textarea name = "content" id = "post" placeholder = "Enter your comment"></textarea><br>
-      <input type = "checkbox" id="deleteall" name="purge"><label for="deleteall">Delete all messages</label><br>
-      <input type = "submit"><input type = "reset">
+      <textarea name = "content" id = "post" placeholder = "Enter your comment"></textarea>
+      <input type = "checkbox" id="deleteall" name="purge"><label for="deleteall">Delete all messages</label>
+      <div id="buttons"><input type = "submit"><input type = "reset"></div><span style="clear: both;"></span>
     </form>
-  </body>
-</html>
+{% endblock %}

@@ -1,14 +1,8 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <title>{{user.name}} on here</title>
-    <link rel="stylesheet" href="../static/user.css">
-  </head>
-  <body>
-    <div id="userbox">
+{% extends "block.html" %}
+{% block title %}{{user.name}} on here{% endblock %}
+{% block css %}/static/users.css{% endblock %}
+{% block body %}
+   <div id="userbox">
       <div id="userbar">
         <h2>{{user.name}}</h2><form action="/follow" method="get" id="follow"><input name="follow" type="hidden" value={{user.name.lower()}}><input type="submit" value={{follow}}></form><br>
         joined: {{user.joined}} ago I think
@@ -18,15 +12,22 @@
         <div class="bio">Bio:<br><textarea name="bio" class="box">{{user.bio}}</textarea></div>
         <div class="bio">Status:<textarea name="status" class="box">{{user.status}}</textarea></div>
       </div>
-        <div id ="savebutton"><input type="submit" form="biobox"></div>
+        <div id ="savebutton"><input type="submit" form="biobox" value="Save"></div>
       </form>
     </div>
+
+    <h2>Following:</h2><br><br>
+    <div id="following">
+      {% for item in following %}
+      <div>
+        <a href={{"/users/"+item}} class ="username">
+        <img class="pfp" src="https://craftypixels.com/placeholder-image/300"><br>
+        <div>@{{item}}</div></a>
+      </div>
+      {% endfor %}
+    </div><br>
+    <h2>Posts:</h2><br>
     <div>
-      <h2>Following:</h2><br>
-      {{following}}
-    </div>
-    <div>
-      <h2>Posts:</h2><br>
       {% for item in posts %}
         <div class="post">
           <b><a href={{"/users/"+item.username}} class ="username">@{{user.name}}</a></b>
@@ -35,5 +36,5 @@
         </div>
       {% endfor %}
     </div>
-  </body>
-</html>
+ 
+{% endblock %}

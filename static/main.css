@@ -11,10 +11,70 @@ a {
   text-decoration: none;
 }
 
+@keyframes move {
+  0%, 100%, 50% {
+    transform: translate(0px);
+  }
+  25% {
+    transform: translate(10px);
+  }
+  75% {
+    transform: translate(-10px);
+  }
+}
+
 .post {
   margin: 10px auto;
   padding: 15px;
+  padding-bottom: 2px;
   width: 80%;
   border: solid grey;
   border-radius: 10px;
+}
+
+.primary {
+  animation: move 4s linear infinite;
+}
+
+.secondary {
+  animation: move 4s -2s linear infinite;
+}
+
+#post {
+  background: black;
+  color: #ebebeb;
+  width: 95%;
+  min-height: 4em;
+  display: block;
+  margin: 2px auto;
+}
+
+#poster {
+  border: solid white;
+  border-radius: 5px;
+  padding: 2px;
+  width: 80%;
+  margin: 0px auto;
+  background: #575757;
+  overflow: hidden; /* else #buttons come out of form */
+}
+
+#deleteall {
+  margin-left: 2%;
+  float:left;
+}
+
+#buttons {
+  float: right;
+  margin: 0 5% 0 0;
+}
+
+.love:checked + label img {
+  filter: brightness(0) saturate(100%) invert(14%) sepia(89%) saturate(7476%) hue-rotate(357deg) brightness(96%) contrast(110%);
+  margin: 0px;
+}
+
+.love + label img {
+  margin: 0px;
+  filter: invert(1);
 }

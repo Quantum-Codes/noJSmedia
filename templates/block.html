@@ -4,10 +4,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/nav.css">
     <link rel="stylesheet" href= {% block css %}{% endblock %}>
   </head>
-  <body>
+  <body style="margin:0px;">
+    <div id="nav">
+      <ul id = "leftnav">
+        <li><a href="/home">Homepage</a></li>
+        <li><a href="/404">404</a></li>
+        <li><a href="/users">Users</a></li>
+        <li><a href="/404">Placeholder but long 404</a></li>
+      </ul>
+      <ul id="rightnav">
+        <li><a href="/logout">Logout</a></li>
+      </ul>
+    </div>
+    <div id="margin">
     {% block body %}
     {% endblock %}
+    </div>
   </body>
 </html>
