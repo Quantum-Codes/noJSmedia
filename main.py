@@ -1,10 +1,3 @@
-"""
-Make userpages and make username restrictions using len() and regex. password only len() restriction.
-maybe make post restrictions also
-making userpage 
-made comment ID. make so that post is saved in db only 1 time (now 2 in data and users). User pages should get data from "data" key. "users" key only must have comment id
-"""
-
 from replit import db
 import secrets, time, random, re
 from flask import Flask, render_template, request, redirect, make_response
@@ -54,18 +47,16 @@ def resetid():
     file.write("0")
 
 """
-db.clear()
-db["data"] = []
-print(db["data"])
+def resetdb():
+  db.clear()
+  db["data"] = []
+  db["login"] = {}
+  db["users"] = {}
+  db["session"] = {}
+  resetid()
+  exit()
 
-db["data"] = []
-
-
-db["login"] = {}
-db["users"] = {}
-db["session"] = {}
-resetid()
-exit()
+resetdb()
 #"""
 @app.route("/", methods=["GET","POST"])
 def mainpage():
@@ -166,12 +157,6 @@ def userpage(user):
       follow = "unfollow"
     postlist = db["users"][user.lower()]["posts"][:] #not pointer which will change the original list. this just copies the list
     postlist.reverse()
-    """
-    for item in db["data"]:
-      if item["id"] in postlist:
-        posts.append(item)
-    """
-    #posts.reverse()#new posts on top
     for item in postlist:
       posts.append(db["data"][item])
 
