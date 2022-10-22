@@ -73,11 +73,13 @@ h2 {
 #following {
   overflow: auto;
   margin: 0px 20px;
+  white-space: nowrap;
 }
 
 #following div {
   display: inline-block;
   text-align: center;
+  margin: 2px;
 }
 
 input[type=submit] {

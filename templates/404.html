@@ -1,8 +1,15 @@
 {% extends "block.html" %}
 {% block title %} 404 not found {% endblock %}
 {% block css %}/static/main.css{% endblock %}
+{% block optionalcss %}<link rel="stylesheet" href=/static/404.css>{% endblock %}
 
 {% block body %}
-The page that you were looking for doesn't even exist in this universe.<br>
-Better go back to the <a href="/home">homepage</a>.
+<div id="contain">
+<div id = "message">
+  <h1>404</h1>
+  The page that you were looking for doesn't even 
+  exist in this universe.<br>
+  Better go back to the <a href="/home">homepage</a>.
+</div>
+</div>
 {% endblock %}

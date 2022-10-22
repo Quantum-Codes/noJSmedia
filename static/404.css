@@ -1,0 +1,11 @@
+#message {
+  display: inline-block;
+  text-align: center;
+}
+
+#contain {
+  display: flex;
+  height: 70vh;
+  justify-content: center;
+  align-items: center;
+}

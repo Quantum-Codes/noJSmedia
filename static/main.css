@@ -39,3 +39,10 @@ a {
   float: right;
   margin: 0 5% 0 0;
 }
+
+#buttons input {
+  padding: 0.5em;
+  margin: 0 2px;
+  border: solid grey;
+  border-radius: 20%;
+}

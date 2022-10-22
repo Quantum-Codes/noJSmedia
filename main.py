@@ -1,8 +1,10 @@
 from replit import db
-import secrets, time, random, re
+import secrets, time, random, re, string
 from flask import Flask, render_template, request, redirect, make_response
 from flask_bcrypt import Bcrypt
 
+#db["users"]["testuser"] = {"name": "TestUser", "joined": int(time.time())-17282776, "bio": "a"*200, "status": (("b"*10)+"\n")*10, "posts":[], "following": list(string.ascii_lowercase), "followers": list(string.ascii_uppercase), "admin": False}
+#exit()
 app = Flask('app')
 hash = Bcrypt(app)
 regexuser = re.compile("^[A-Za-z0-9_-]{1,20}$")
@@ -35,10 +37,11 @@ def passvalid(passwo):
   return regexpass.match(passwo)
 
 def postvalid(post):
-  if 0 < len(post) < 101:
+  limit = 500
+  if 0 < len(post) <= limit:
     return post
   elif len(post) > 0:
-    return post[:100]
+    return post[:limit]
   else:
     return False
 
@@ -71,7 +74,7 @@ def homepage():
   if not user:
     return redirect("/login")
   if request.method == "POST":
-    postcontent = postvalid(request.form["content"])
+    postcontent = postvalid(request.form["content"].strip())
     if request.form.get("purge") == "on":
       db["data"] = []
       resetid()
@@ -141,6 +144,11 @@ def userpage(user):
   username = verify_session(request)
   if not username:
     return redirect("/login")
+
+  selfprofile =  (user.lower() == username.lower()) #check whether his own profile is requested 
+  print(selfprofile)
+ 
+  
   if request.method == "POST":
     bio = request.form["bio"]
     status = request.form["status"]
@@ -152,7 +160,7 @@ def userpage(user):
   if db["users"].get(user.lower()):
     posts = []
     follow = "follow"
-    following = db["users"][username.lower()]["following"]
+    following = db["users"][user.lower()]["following"]
     if user.lower() in following:
       follow = "unfollow"
     postlist = db["users"][user.lower()]["posts"][:] #not pointer which will change the original list. this just copies the list
@@ -160,17 +168,17 @@ def userpage(user):
     for item in postlist:
       posts.append(db["data"][item])
 
-    return render_template("user.html", user=db["users"][user.lower()], posts=posts, follow = follow, following = following)
+    return render_template("user.html", user=db["users"][user.lower()], posts=posts, follow = follow, following = following,  self = selfprofile)
   else:
     return f"User {user} doesn't exist..."
 
 @app.route("/follow")
 def followpage():
   user = verify_session(request)
-  print(request.args)
+  print(request.args) #request args data already lowercase
   if request.args["follow"] in db["users"][user]["following"]:
     db["users"][user]["following"].remove(request.args["follow"])
-  else:
+  elif db["users"].get(request.args["follow"]):
     db["users"][user]["following"].append(request.args["follow"])
   return redirect("/users/"+request.args["follow"])
 

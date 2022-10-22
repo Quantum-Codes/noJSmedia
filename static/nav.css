@@ -2,6 +2,10 @@
   background: #2291e6;
   display: flex;
   justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1;
 }
 
 #nav li a {
@@ -26,4 +30,6 @@
 
 #margin {
   margin: 1em;
+  margin-top: 3em;
+
 }
