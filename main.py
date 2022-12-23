@@ -145,8 +145,7 @@ def userpage(user):
   if not username:
     return redirect("/login")
 
-  selfprofile =  (user.lower() == username.lower()) #check whether his own profile is requested 
-  print(selfprofile)
+  selfprofile =  (user.lower() == username.lower()) #check whether his own profile is requested
  
   
   if request.method == "POST":
