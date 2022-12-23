@@ -15,7 +15,7 @@
         <div class="bio">Bio:<br><textarea name="bio" class="box" {% if not self %}readOnly{% endif %}>{{user.bio}}</textarea></div>
         <div class="bio">Status:<textarea name="status" class="box" {% if not self %}readOnly{% endif %}>{{user.status}}</textarea></div>
       </div>
-        {% if self %}
+        {% if selfprofile %}
         <div id ="savebutton"><input type="submit" form="biobox" value="Save"></div>
         {% endif %}
       </form>
@@ -37,5 +37,5 @@
         {{ comment(item, loop.index0) }}
       {% endfor %}
     </div>
- 
+ {{selfprofile}}
 {% endblock %}

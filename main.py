@@ -156,21 +156,23 @@ def userpage(user):
       bio = bio[:100]
       status = status[:100]
     db["users"][username.lower()].update(bio=bio, status=status) #update multiple keys at once
+    return "Done the post req. anyway Noone reading the response"
 
   if db["users"].get(user.lower()):
     posts = []
     follow = "follow"
     following = db["users"][user.lower()]["following"]
-    if user.lower() in following:
+    selffollowing= db["users"][username.lower()]["following"]
+    if user.lower() in selffollowing:
       follow = "unfollow"
     postlist = db["users"][user.lower()]["posts"][:] #not pointer which will change the original list. this just copies the list
     postlist.reverse()
     for item in postlist:
       posts.append(db["data"][item])
 
-    return render_template("user.html", user=db["users"][user.lower()], posts=posts, follow = follow, following = following,  self = selfprofile)
+    return render_template("user.html", user=db["users"][user.lower()], posts=posts, follow = follow, following = following,  selfprofile = selfprofile)
   else:
-    return f"User {user} doesn't exist..."
+    return render_template("404.html", msg= f"User {user} doesn't exist.")
 
 @app.route("/follow")
 def followpage():
