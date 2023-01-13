@@ -16,7 +16,7 @@ def hashit(password):
 def compareit(hashed, password):
   return hash.check_password_hash(hashed, password)
 
-def create_session():
+def create_session(): #throw in some stuff
   ses = f"{secrets.token_urlsafe(10)}{hex(int(time.time()))[2:]}{secrets.token_urlsafe(10)}{hex(random.randint(1000,9999999999))[2:]}"
   if db["session"].get(ses):
     ses = create_session()
@@ -75,7 +75,7 @@ def homepage():
     return redirect("/login")
   if request.method == "POST":
     postcontent = postvalid(request.form["content"].strip())
-    if request.form.get("purge") == "on":
+    if request.form.get("purge") == "on" and db["users"][user.lower()]["admin"]:
       db["data"] = []
       resetid()
       for item in db["users"].keys():
@@ -155,7 +155,6 @@ def userpage(user):
       bio = bio[:100]
       status = status[:100]
     db["users"][username.lower()].update(bio=bio, status=status) #update multiple keys at once
-    return "Done the post req. anyway Noone reading the response"
 
   if db["users"].get(user.lower()):
     posts = []

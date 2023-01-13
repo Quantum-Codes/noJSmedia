@@ -12,7 +12,7 @@
     <form method="post" id="poster">
       <label for = "post">Comment:</label><br>
       <textarea name = "content" id = "post" placeholder = "Enter your comment"></textarea>
-      <input type = "checkbox" id="deleteall" name="purge"><label for="deleteall">Delete all messages</label>
+      {% if user.admin %}<input type = "checkbox" id="deleteall" name="purge"><label for="deleteall">Delete all messages</label>{% endif %}
       <div id="buttons"><input type = "submit" value="Post"><input type = "reset" value="Clear"></div><span style="clear: both;"></span>
     </form>
 <br>
