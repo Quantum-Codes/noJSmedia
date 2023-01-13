@@ -40,6 +40,16 @@ a {
   margin: 0 5% 0 0;
 }
 
+#buttons > input[type=submit] {
+  background: #b5fc6d;
+  border: solid #659437;
+}
+
+#buttons > input[type=reset] {
+  background: #ff9191;
+  border: solid #ad5757;
+}
+
 #buttons input {
   padding: 0.5em;
   margin: 0 2px;
