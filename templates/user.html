@@ -12,8 +12,8 @@
       </div>
       <form id="biobox" method= "post">
       <div style="display: flex;">
-        <div class="bio">Bio:<br><textarea name="bio" class="box" {% if not self %}readOnly{% endif %}>{{user.bio}}</textarea></div>
-        <div class="bio">Status:<textarea name="status" class="box" {% if not self %}readOnly{% endif %}>{{user.status}}</textarea></div>
+        <div class="bio">Bio:<br><textarea name="bio" class="box" {% if not selfprofile %}readOnly{% endif %}>{{user.bio}}</textarea></div>
+        <div class="bio">Status:<textarea name="status" class="box" {% if not selfprofile %}readOnly{% endif %}>{{user.status}}</textarea></div>
       </div>
         {% if selfprofile %}
         <div id ="savebutton"><input type="submit" form="biobox" value="Save"></div>
