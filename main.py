@@ -16,8 +16,8 @@ def hashit(password):
 def compareit(hashed, password):
   return hash.check_password_hash(hashed, password)
 
-def create_session(): #throw in some stuff
-  ses = f"{secrets.token_urlsafe(10)}{hex(int(time.time()))[2:]}{secrets.token_urlsafe(10)}{hex(random.randint(1000,9999999999))[2:]}"
+def create_session():
+  ses = f"{secrets.token_urlsafe(64)}"
   if db["session"].get(ses):
     ses = create_session()
   return ses
@@ -188,7 +188,11 @@ def userlist():
   if request.args.get("q"):
     return redirect(f"/users/{request.args['q'].strip()}")
   return render_template("allusers.html", text=db["users"].keys())
-  
+
+@app.route("/faqs")
+def faqpage():
+  return render_template("FAQs.html")
+
 @app.route("/logout")
 def logoutpage():
   user = verify_session(request)

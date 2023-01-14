@@ -3,6 +3,10 @@ body {
   color: white;
 }
 
+h1 {
+  margin: 0px;
+}
+
 a {
   color: #00a4d6;
 }

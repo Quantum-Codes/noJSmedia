@@ -1,0 +1,10 @@
+#margin {
+  padding: 1em;
+}
+
+summary {
+  font-weight: bold;
+  color: #f0f0f0;
+  margin-bottom: 1em;
+  margin-top: 2em;
+}

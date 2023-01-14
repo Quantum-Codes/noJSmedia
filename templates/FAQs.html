@@ -1,0 +1,31 @@
+{% extends "block.html" %}
+{% block title %}FAQs{% endblock %}
+{% block css %}/static/main.css{% endblock %}
+{% block optionalcss %}<link rel="stylesheet" href=/static/faqs.css>{% endblock %}
+
+
+{% block body %}
+<h1>FAQs:</h1>(not really but should be)
+<br><br>
+<details>
+  <summary>What is this?</summary>
+  <p>This is a website made without any use of javascript. Everything is done using POST or GET requests and reloading the page.</p>
+</details> 
+
+<details>
+  <summary>Why you made this?</summary>
+  <p>Because I wanted to make one...
+  I'll learn JS and make a better one with it if I find time.</p>
+</details>
+
+<details>
+  <summary>Loves doesn't work</summary>   
+  <p>Yeah I know. Even following does nothing. This is not meant to be used as an actual social media; don't try to use this as such (even occasionally)</p>
+</details>
+
+<details>
+  <summary>Why did you make FAQ?</summary>
+  <p>Navbar felt empty and I wanted to try out these detail tags.</p>
+</details>
+
+{% endblock %}
