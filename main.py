@@ -1,10 +1,15 @@
-from replit import db
+from db import db
 import secrets, time, random, re
 from flask import Flask, render_template, request, redirect, make_response
 from flask_bcrypt import Bcrypt
 
 #db["users"]["testuser"] = {"name": "TestUser", "joined": int(time.time())-17282776, "bio": "a"*200, "status": (("b"*10)+"\n")*10, "posts":[], "following": list(string.ascii_lowercase), "followers": list(string.ascii_uppercase), "admin": False}
 #exit()
+
+db = db()  # Initialize the database
+# db.py is a drop-in replacement for replit db which stopped working
+# It uses a JSON file to store data and provides methods to save, update, and clear the database.
+
 app = Flask('app')
 hash = Bcrypt(app)
 regexuser = re.compile("^[A-Za-z0-9_-]{1,20}$")
@@ -16,7 +21,7 @@ def hashit(password):
 def compareit(hashed, password):
   return hash.check_password_hash(hashed, password)
 
-def create_session():
+def create_session(): # create session token
   ses = f"{secrets.token_urlsafe(64)}"
   if db["session"].get(ses):
     ses = create_session()
@@ -80,6 +85,7 @@ def homepage():
       resetid()
       for item in db["users"].keys():
         db["users"][item]["posts"] = []
+        db.save()
     elif postcontent:
       comments = db["data"]
       with open("id.txt","r") as file:
@@ -94,6 +100,7 @@ def homepage():
       comments.append(comment)
       db["users"][user.lower()]["posts"].append(commentid)
       db["data"] = comments
+      db.save()
     return redirect("/home")
   else:
     pass
@@ -109,6 +116,7 @@ def loginpage():
     if compareit(db["login"][request.form["user"].lower()], request.form["pass"]):
       session = create_session()
       db["session"][session] = request.form["user"].lower()
+      db.save()
       return respond("session",session,"/home",30*24*60*60)
     else:
       return respond("msg","wrong credentials","/login")
@@ -133,6 +141,7 @@ def signuppage():
       session = create_session() #CREATION HERE
       db["session"][session] = request.form["user"].lower()
       db["users"][request.form["user"].lower()] = {"name": request.form["user"], "joined": int(time.time()), "bio": "", "status": "", "posts":[], "following": [], "followers": [], "admin": False}
+      db.save()
       return respond("session",session,"/home",30*24*60*60)
   msg = request.cookies.get("msg")
   res = make_response(render_template("signup.html",msg=msg))
@@ -145,7 +154,7 @@ def userpage(user):
   if not username:
     return redirect("/login")
 
-  selfprofile =  (user.lower() == username.lower()) #check whether his own profile is requested
+  selfprofile = (user.lower() == username.lower()) #check whether his own profile is requested
  
   
   if request.method == "POST":
@@ -155,7 +164,7 @@ def userpage(user):
       bio = bio[:100]
       status = status[:100]
     db["users"][username.lower()].update(bio=bio, status=status) #update multiple keys at once
-
+    db.save()
   if db["users"].get(user.lower()):
     posts = []
     follow = "follow"
@@ -180,6 +189,8 @@ def followpage():
     db["users"][user]["following"].remove(request.args["follow"])
   elif db["users"].get(request.args["follow"]):
     db["users"][user]["following"].append(request.args["follow"])
+
+  db.save()
   return redirect("/users/"+request.args["follow"])
 
 

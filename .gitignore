@@ -2,3 +2,5 @@
 .replit
 replit.nix
 /.config
+**/__pycache__
+db.json
